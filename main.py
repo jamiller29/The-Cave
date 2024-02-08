@@ -7,16 +7,15 @@ Error Handling for incorrect input
 
 """
 
-
 # IMPORT STATEMENTS
 import pyfiglet
 from os import system
 import PySimpleGUI as psg
 from level import Level
 from hero import Hero
-from cave import Cave
 
-# CREATING CLASS VARIABLES
+
+# CREATING CLASS Objects
 level = Level()
 hero = Hero()
 
@@ -31,10 +30,9 @@ select_file = psg.popup_get_file('Select a File', title='File Selector')
 level.load_level(select_file)
 hero.spawn_hero()
 
+
 # TEST CODE HERE
-#print(Level.MONSTER)
-#print(level.MONSTER[0])
-#print(Cave.find_location(Level.Master_Level, 'M'))
+
 
 # Main Game Loop
 def main(game_status):
