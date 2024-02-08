@@ -35,12 +35,34 @@ class Hero:
         Hero.Player_Map[c_loc[0]][c_loc[1]] = '*'
         Hero.Player_Map[n_loc[0]][n_loc[1]] = 'H'
 
-    def wall_collision(self, direction):
+
+    def wall_collision(self, direc, n_loc):
         if Level.detect_collision(Level.Master_Level, 'H'):
-            if direction == 'N':
-            elif direction == 'S':
-            elif direction == 'E':
-            else
+            if direc == 'N':
+                Level.Master_Level[n_loc[0] + self.speed][n_loc[1]] = 'H'
+                Level.Master_Level[n_loc[0]][n_loc[1]] = 'W'
+                Hero.Player_Map[n_loc[0] + self.speed][n_loc[1]] = 'H'
+                Hero.Player_Map[n_loc[0]][n_loc[1]] = 'W'
+                print("You cannot move through a wall!")
+            elif direc == 'S':
+                Level.Master_Level[n_loc[0] - self.speed][n_loc[1]] = 'H'
+                Level.Master_Level[n_loc[0]][n_loc[1]] = 'W'
+                Hero.Player_Map[n_loc[0] - self.speed][n_loc[1]] = 'H'
+                Hero.Player_Map[n_loc[0]][n_loc[1]] = 'W'
+                print("You cannot move through a wall!")
+            elif direc == 'E':
+                Level.Master_Level[n_loc[0]][n_loc[1] - self.speed] = 'H'
+                Level.Master_Level[n_loc[0]][n_loc[1]] = 'W'
+                Hero.Player_Map[n_loc[0]][n_loc[1] - self.speed] = 'H'
+                Hero.Player_Map[n_loc[0]][n_loc[1]] = 'W'
+                print("You cannot move through a wall!")
+            else: # West
+                Level.Master_Level[n_loc[0]][n_loc[1] + self.speed] = 'H'
+                Level.Master_Level[n_loc[0]][n_loc[1]] = 'W'
+                Hero.Player_Map[n_loc[0]][n_loc[1] + self.speed] = 'H'
+                Hero.Player_Map[n_loc[0]][n_loc[1]] = 'W'
+                print("You cannot move through a wall!")
+
 
 
     @staticmethod
@@ -64,7 +86,8 @@ class Hero:
                 if b == d:
                     print("You hear the snarl of a monster somewhere in the darkness.")
 
-    def hero_move(self, direction):
+    def hero_move(self):
+        direction = input("Which direction do you move? N, S, E, W:  ").upper()
         n_loc = []
         current_loc = []
         Level.find_position(Level.Master_Level, current_loc, 'H')
@@ -75,6 +98,7 @@ class Hero:
             n_loc.append(n_loc_y)
             Hero.listen()
             Hero.update_map(current_loc, n_loc)
+            Hero.wall_collision(direc=direction, n_loc=n_loc)
         elif direction == 'S':
             n_loc_x = current_loc[0] + self.speed
             n_loc_y = current_loc[1]
@@ -82,6 +106,7 @@ class Hero:
             n_loc.append(n_loc_y)
             Hero.listen()
             Hero.update_map(current_loc, n_loc)
+            Hero.wall_collision(direc=direction, n_loc=n_loc)
         elif direction == 'E':
             n_loc_x = current_loc[0]
             n_loc_y = current_loc[1] + self.speed
@@ -89,6 +114,7 @@ class Hero:
             n_loc.append(n_loc_y)
             Hero.listen()
             Hero.update_map(current_loc, n_loc)
+            Hero.wall_collision(direc=direction, n_loc=n_loc)
         elif direction == 'W':
             n_loc_x = current_loc[0]
             n_loc_y = current_loc[1] - self.speed
@@ -96,3 +122,6 @@ class Hero:
             n_loc.append(n_loc_y)
             Hero.listen()
             Hero.update_map(current_loc, n_loc)
+            Hero.wall_collision(direc=direction, n_loc=n_loc)
+        else:
+            print('You entered an invalid direction.')
