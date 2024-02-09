@@ -29,6 +29,7 @@ class Level:
             # print(level_slice)
             Level.Master_Level.append(level_slice)
 
+
     @staticmethod
     def find_position(lst, output_lst, tgt):
         for i, sublist in enumerate(lst):

@@ -5,13 +5,20 @@ from random import choice
 
 class Hero:
     # Class Variables
-    Player_Map = Level.Master_Level
+    Player_Map = []
 
     def __init__(self):
         self.speed = 1
         self.flashlight = 1
         self.attack_range = 2
         self.has_spear = True
+
+    def gen_player_map(self):
+        for _ in range(20):
+            row = []
+            for _ in range(20):
+                row.append(' ')
+            Hero.Player_Map.append(row)
 
     @staticmethod
     def spawn_hero():  # Randomly Spawn the Hero
@@ -32,19 +39,17 @@ class Hero:
         hero_location_x = hero_location[0]
         hero_location_y = hero_location[1]
         Level.Master_Level[hero_location_x][hero_location_y] = 'H'
-        # Hero.Player_Map[hero_location_x][hero_location_y] = 'H'
+        Hero.Player_Map[hero_location[0]][hero_location[1]] = 'H'
 
     @staticmethod
     def player_map():
-        # for rows in Level.Master_Level:
-        #     print(rows)
-        for rows in Hero.Player_Map:
-            print(' '.join(rows))
+        for row in Hero.Player_Map:
+            print(' '.join(row))
 
     @staticmethod
-    def update_map(new_location, c_loc):
-        Level.Master_Level[c_loc[0][0]][c_loc[0][1]] = ' '
-        Level.Master_Level[new_location[0][0]][new_location[0][1]] = 'H'
+    def dm_map():
+        for row in Level.Master_Level:
+            print(' '.join(row))
 
     @staticmethod
     def listen():
@@ -54,70 +59,61 @@ class Hero:
         listen_for_pit = []
         Level.dmz(hero_location[0][0], hero_location[0][1], Level.Master_Level, listen_for_monster, 3)
         Level.dmz(hero_location[0][0], hero_location[0][1], Level.Master_Level, listen_for_pit, 2)
-        for a,b in enumerate(listen_for_pit):
-            for c,d in enumerate(Level.PIT):
+        for a, b in enumerate(listen_for_pit):
+            for c, d in enumerate(Level.PIT):
                 if b == d:
                     print("You hear a howl of wind and feel it against your face as if your standing on the ledge of "
                           "something.")
-        for a,b in enumerate(listen_for_monster):
-            for c,d in enumerate(Level.MONSTER):
+        for a, b in enumerate(listen_for_monster):
+            for c, d in enumerate(Level.MONSTER):
                 if b == d:
                     print("You hear the snarl of a monster somewhere in the darkness.")
-        # print(listen_for_pit)
-        # print(listen_for_monster)
-    def move(self):
+
+    @staticmethod
+    def torch():
+        hero_location = []
+        flashlight = []
+        Level.find_position(Level.Master_Level, hero_location, "H")
+        Level.dmz(row=hero_location[0][0], col=hero_location[0][1], lst=Level.Master_Level, out_put_lst=flashlight,
+                  no_spawn_range=2)
+        for x, y in enumerate(flashlight):
+            for a, b in enumerate(Level.Wall_Loc):
+                if y == b:
+                    Hero.Player_Map[b[0]][b[1]] = 'W'
+                else:
+                    Hero.Player_Map[b[0]][b[1]] = ' '
+
+    def wall_collision(self, direction):
         current_hero_location = []
-        new_hero_location = []
         Level.find_position(Level.Master_Level, current_hero_location, 'H')
-        direction = input("What direction do you move? N, S, E, or W: ").upper()
+        if Level.detect_collision(Level.Wall_Loc, current_hero_location):
+            print("You ran into a wall!")
+            row_adj, col_adj = {
+                'N': [self.speed, 0],
+                'S': [-self.speed, 0],
+                'E': [0, -self.speed],
+                'W': [0, self.speed],
+            }.get(direction)
 
-        if direction == 'N':
-            new_hero_location_x = current_hero_location[0][0] - self.speed
-            new_hero_location_y = current_hero_location[0][1]
-            new_hero_location.append([new_hero_location_x, new_hero_location_y])
-            Hero.update_map(new_hero_location, current_hero_location)
-            Hero.listen()
-            print("You move to the North.")
-            if Level.detect_collision(Level.Wall_Loc, new_hero_location):
-                Level.Master_Level[new_hero_location[0][0] + self.speed][new_hero_location[0][1]] = 'H'
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1]] = 'W'
-                print("You walked into a wall!")
+            Level.Master_Level[current_hero_location[0][0] + row_adj][current_hero_location[0][1] + col_adj] = 'H'
+            Level.Master_Level[current_hero_location[0][0]][current_hero_location[0][1]] = 'W'
+            Hero.Player_Map[current_hero_location[0][0] + row_adj][current_hero_location[0][1] + col_adj] = 'H'
+            Hero.Player_Map[current_hero_location[0][0]][current_hero_location[0][1]] = 'W'
 
-        elif direction == 'S':
-            new_hero_location_x = current_hero_location[0][0] + self.speed
-            new_hero_location_y = current_hero_location[0][1]
-            new_hero_location.append([new_hero_location_x, new_hero_location_y])
-            Hero.update_map(new_hero_location, current_hero_location)
-            Hero.listen()
-            print("You move to the South.")
-            if Level.detect_collision(Level.Wall_Loc, new_hero_location):
-                Level.Master_Level[new_hero_location[0][0] - self.speed][new_hero_location[0][1]] = 'H'
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1]] = 'W'
-                print("You walked into a wall!")
+    def move(self, d):
+        current_hero_location = []
+        Level.find_position(Level.Master_Level, current_hero_location, 'H')
+        row_adj, col_adj = {
+            'N': [-self.speed, 0],
+            'S': [self.speed, 0],
+            'E': [0, self.speed],
+            'W': [0, -self.speed],
+        }.get(d)
 
-        elif direction == 'E':
-            new_hero_location_x = current_hero_location[0][0]
-            new_hero_location_y = current_hero_location[0][1] + self.speed
-            new_hero_location.append([new_hero_location_x, new_hero_location_y])
-            Hero.update_map(new_hero_location, current_hero_location)
-            Hero.listen()
-            print("You move to the East.")
-            if Level.detect_collision(Level.Wall_Loc, new_hero_location):
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1] - self.speed] = 'H'
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1]] = 'W'
-                print("You walked into a wall!")
-
-        elif direction == 'W':
-            new_hero_location_x = current_hero_location[0][0]
-            new_hero_location_y = current_hero_location[0][1] - self.speed
-            new_hero_location.append([new_hero_location_x, new_hero_location_y])
-            Hero.update_map(new_hero_location, current_hero_location)
-            Hero.listen()
-            print("You move to the West.")
-            if Level.detect_collision(Level.Wall_Loc, new_hero_location):
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1] + self.speed] = 'H'
-                Level.Master_Level[new_hero_location[0][0]][new_hero_location[0][1]] = 'W'
-                print("You walked into a wall!")
-
-        else:
-            print("You did not enter a valid direction")
+        Level.Master_Level[current_hero_location[0][0] + row_adj][current_hero_location[0][1] + col_adj] = 'H'
+        Level.Master_Level[current_hero_location[0][0]][current_hero_location[0][1]] = ' '
+        Hero.Player_Map[current_hero_location[0][0] + row_adj][current_hero_location[0][1] + col_adj] = 'H'
+        Hero.Player_Map[current_hero_location[0][0]][current_hero_location[0][1]] = '*'
+        Hero.wall_collision(self, direction=d)
+        Hero.listen()
+        Hero.player_map()

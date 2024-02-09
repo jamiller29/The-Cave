@@ -9,10 +9,11 @@ Error Handling for incorrect input
 
 # IMPORT STATEMENTS
 import pyfiglet
-#from os import system
+# from os import system
 import PySimpleGUI as psg
 from level import Level
 from hero import Hero
+from replit import clear
 
 # CREATING CLASS Objects
 level = Level()
@@ -32,8 +33,8 @@ Level.find_position(Level.Master_Level, Level.Spawn_Loc, 'E')
 Level.find_position(Level.Master_Level, Level.MONSTER, 'M')
 Level.find_position(Level.Master_Level, Level.TREASURE, 'T')
 Level.find_position(Level.Master_Level, Level.PIT, 'P')
+hero.gen_player_map()
 hero.spawn_hero()
-
 
 
 # TEST CODE HERE
@@ -42,12 +43,14 @@ hero.spawn_hero()
 # Main Game Loop
 def main(game_on):
     while game_on:
+        clear()
         action = int(input("Choose your action.  \n 1. Move \n 2. Attack \n 3. Give Up\n "
                            "Action: "))
         if action == 1:
-            hero.move()
+            direction = input("What direction do you move? N, S, E, or W: ").upper()
+            hero.move(d=direction)
         elif action == 2:
-            hero.player_map()
+            hero.dm_map()
         elif action == 3:
             choice = input("Would you like to save your game? Y or N: ").upper()
             if choice == 'Y':
