@@ -34,7 +34,9 @@ Level.find_position(Level.Master_Level, Level.MONSTER, 'M')
 Level.find_position(Level.Master_Level, Level.TREASURE, 'T')
 Level.find_position(Level.Master_Level, Level.PIT, 'P')
 hero.gen_player_map()
+hero.gen_player_map_x()
 hero.spawn_hero()
+
 
 
 # TEST CODE HERE
@@ -44,13 +46,13 @@ hero.spawn_hero()
 def main(game_on):
     while game_on:
         clear()
-        action = int(input("Choose your action.  \n 1. Move \n 2. Attack \n 3. Give Up\n "
+        action = int(input("Choose your action.  \n 1. Move \n 2. View Map \n 3. Give Up\n "
                            "Action: "))
         if action == 1:
             direction = input("What direction do you move? N, S, E, or W: ").upper()
             hero.move(d=direction)
         elif action == 2:
-            Hero.dm_map()
+            Hero.player_map_visible()
         elif action == 3:
             # choice = input("Would you like to save your game? Y or N: ").upper()
             # if choice == 'Y':
