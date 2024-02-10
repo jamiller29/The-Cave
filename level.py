@@ -40,10 +40,10 @@ class Level:
     # A function to write the level to a text file.
     @classmethod
     def write_level(cls, lst, file_name):
-        new_cave = open(file_name, "w")
+        file_name = open(file_name, "w")
         for line in lst:
             file_name.write(' '.join(line) + '\n')
-        new_cave.close()
+        file_name.close()
 
     @staticmethod
     def detect_collision(lst, tgt):

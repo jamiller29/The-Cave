@@ -72,16 +72,29 @@ class Hero:
     @staticmethod
     def torch():
         hero_location = []
-        flashlight = []
-        Level.find_position(Level.Master_Level, hero_location, "H")
-        Level.dmz(row=hero_location[0][0], col=hero_location[0][1], lst=Level.Master_Level, out_put_lst=flashlight,
-                  no_spawn_range=2)
-        for x, y in enumerate(flashlight):
-            for a, b in enumerate(Level.Wall_Loc):
-                if y == b:
+        visible = []
+        Level.find_position(Level.Master_Level, hero_location, 'H')
+        Level.dmz(hero_location[0][0], hero_location[0][1], Level.Master_Level, visible, 2)
+
+        for a, b in enumerate(Hero.Player_Map):
+            for c, d in enumerate(b):
+                if d in ['W', 'T', 'P']:
+                    Hero.Player_Map[a][c] = ' '
+
+        for a, b in enumerate(visible):
+            for c, d in enumerate(Level.Wall_Loc):
+                if b == d:
                     Hero.Player_Map[b[0]][b[1]] = 'W'
-                else:
-                    Hero.Player_Map[b[0]][b[1]] = ' '
+
+        for a, b in enumerate(visible):
+            for c, d in enumerate(Level.TREASURE):
+                if b == d:
+                    Hero.Player_Map[b[0]][b[1]] = 'T'
+
+        for a, b in enumerate(visible):
+            for c, d in enumerate(Level.PIT):
+                if b == d:
+                    Hero.Player_Map[b[0]][b[1]] = 'P'
 
     def wall_collision(self, direction):
         current_hero_location = []
@@ -116,4 +129,5 @@ class Hero:
         Hero.Player_Map[current_hero_location[0][0]][current_hero_location[0][1]] = '*'
         Hero.wall_collision(self, direction=d)
         Hero.listen()
+        Hero.torch()
         Hero.player_map()

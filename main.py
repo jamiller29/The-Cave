@@ -50,15 +50,13 @@ def main(game_on):
             direction = input("What direction do you move? N, S, E, or W: ").upper()
             hero.move(d=direction)
         elif action == 2:
-            hero.dm_map()
+            Hero.dm_map()
         elif action == 3:
-            choice = input("Would you like to save your game? Y or N: ").upper()
-            if choice == 'Y':
-                save_game_as = input("Save Game As? All one word: ").lower()
-                level.write_level(Level.Master_Level, save_game_as)
-                game_on = False
-            else:
-                game_on = False
+            # choice = input("Would you like to save your game? Y or N: ").upper()
+            # if choice == 'Y':
+            #     save_game_as = input("Save Game As? All one word: ").lower()
+            #     level.write_level(Level.Master_Level, save_game_as)
+            game_on = False
 
 
 if __name__ == '__main__':
