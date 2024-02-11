@@ -20,7 +20,7 @@ level = Level()
 hero = Hero()
 
 # GLOBAL VARIABLES
-GAME_STATUS = True
+
 
 # Import Game File pop-up
 print(pyfiglet.figlet_format("The Cave", font='slant'))
@@ -38,28 +38,39 @@ hero.gen_player_map_x()
 hero.spawn_hero()
 
 
-
 # TEST CODE HERE
 
 
 # Main Game Loop
-def main(game_on):
-    while game_on:
-        clear()
-        action = int(input("Choose your action.  \n 1. Move \n 2. View Map \n 3. Give Up\n "
-                           "Action: "))
+def main():
+    game_status = True
+    while game_status:
+        action = int(input("Choose your action.\n 1. Move \n 2. View Map \n 3. Use Compass\n 4. Attack\n 5. Give "
+                           "up\nAction: "))
         if action == 1:
             direction = input("What direction do you move? N, S, E, or W: ").upper()
             hero.move(d=direction)
+            hero.win_conditions()
+            if not Hero.GAME_STATUS:
+                game_status = False
         elif action == 2:
-            Hero.player_map_visible()
+            if hero.has_map:
+                Hero.player_map_visible()
+            else:
+                print("You do not have a map.")
         elif action == 3:
-            # choice = input("Would you like to save your game? Y or N: ").upper()
-            # if choice == 'Y':
-            #     save_game_as = input("Save Game As? All one word: ").lower()
-            #     level.write_level(Level.Master_Level, save_game_as)
-            game_on = False
+            if hero.has_compas:
+                Hero.compas()
+            else:
+                print("You do not have a compas.")
+        elif action == 4:
+            if hero.has_spear:
+                hero.attack()
+            else:
+                print("You do not have a spear.")
+        elif action == 5:
+            game_status = False
 
 
 if __name__ == '__main__':
-    main(game_on=GAME_STATUS)
+    main()
