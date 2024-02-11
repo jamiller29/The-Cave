@@ -1,5 +1,5 @@
 import pyfiglet
-
+from random import choice
 
 class Level:
     # Class Variables
@@ -9,6 +9,7 @@ class Level:
     TREASURE = []
     PIT = []
     MONSTER = []
+    COMPAS = []
 
 
     def __init__(self):
@@ -65,6 +66,13 @@ class Level:
             for y in range(col - i, col + j):
                 if 0 <= x < len(lst) and 0 <= y < len(lst[row]):
                     out_put_lst.append([x, y])
+
+    def spawn_compas(self):
+        compas_location = choice(Level.Spawn_Loc)
+        compas_location_x = compas_location[0]
+        compas_location_y = compas_location[1]
+        Level.Master_Level[compas_location_x][compas_location_y] = 'C'
+
 
 
 

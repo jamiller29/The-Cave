@@ -36,39 +36,52 @@ Level.find_position(Level.Master_Level, Level.PIT, 'P')
 hero.gen_player_map()
 hero.gen_player_map_x()
 hero.spawn_hero()
+level.spawn_compas()
 
 
 # TEST CODE HERE
-
+compas_loc = []
+Level.find_position(Level.Master_Level, compas_loc, 'C')
+print(compas_loc)
 
 # Main Game Loop
 def main():
     game_status = True
     while game_status:
-        action = int(input("Choose your action.\n 1. Move \n 2. View Map \n 3. Use Compass\n 4. Attack\n 5. Give "
-                           "up\nAction: "))
-        if action == 1:
-            direction = input("What direction do you move? N, S, E, or W: ").upper()
+        while True:
+            action = input("1. Move\n2. Look at map\n3. Use Compas\n4. Attack\n5. Give Up.\nAction: ")
+            if action in ['1', '2', '3', '4', '5']:
+                break
+            else:
+                print('You did not enter a valid action')
+        if action == '1':
+            while True:
+                direction = input('What direction do you want to move? N, S, E, or W: ').upper()
+                if direction in ['N', 'S', 'E', 'W']:
+                    break
+                else:
+                    print('You did not enter a valid direction.')
             hero.move(d=direction)
             hero.win_conditions()
             if not Hero.GAME_STATUS:
                 game_status = False
-        elif action == 2:
-            if hero.has_map:
+
+        elif action == '2':
+            if hero.dm_map:
                 Hero.player_map_visible()
             else:
                 print("You do not have a map.")
-        elif action == 3:
+        elif action == '3':
             if hero.has_compas:
                 Hero.compas()
             else:
                 print("You do not have a compas.")
-        elif action == 4:
+        elif action == '4':
             if hero.has_spear:
                 hero.attack()
             else:
                 print("You do not have a spear.")
-        elif action == 5:
+        elif action == '5':
             game_status = False
 
 

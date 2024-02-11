@@ -104,7 +104,7 @@ class Hero:
 
         for a, b in enumerate(Hero.Player_Map):
             for c, d in enumerate(b):
-                if d in ['W', 'T', 'P']:
+                if d in ['W', 'T', 'P', 'C']:
                     Hero.Player_Map[a][c] = ' '
 
         for a, b in enumerate(visible):
@@ -118,6 +118,11 @@ class Hero:
                 if b == d:
                     Hero.Player_Map[b[0]][b[1]] = 'T'
                     Hero.Player_Map_visible[b[0]][b[1]] = 'T'
+        for a, b in enumerate(visible):
+            for c, d in enumerate(Level.TREASURE):
+                if b == d:
+                    Hero.Player_Map[b[0]][b[1]] = 'C'
+                    Hero.Player_Map_visible[b[0]][b[1]] = 'C'
 
         # for a, b in enumerate(visible):
         #     for c, d in enumerate(Level.PIT):
